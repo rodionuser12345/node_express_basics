@@ -1,7 +1,11 @@
 const express = require("express");
 const recipesRouter = require("./routers/recipes");
+const cors = require("cors");
+const { handleError } = require("./utils/error");
 
 const app = express();
+
+app.use(cors());
 
 app.use((req, res, next) => {
   const { method, path } = req;
@@ -14,7 +18,13 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/", (req, res) => {
+  res.redirect("/api/v1/recipes");
+});
+
 app.use("/api/v1/recipes", recipesRouter);
+
+app.use(handleError);
 
 const port = process.env.PORT || 8080;
 
